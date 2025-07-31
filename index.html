@@ -20,8 +20,8 @@
   <div id="dobResult"></div>
 
   <script>
-    const alexStart = new Date("2005-01-22T00:00:00Z");
-    const msPerYear = 1000 * 60 * 60 * 24 * 365.2425; // average year length accounting for leap years
+    const alexStart = new Date("2005-01-22T00:00:00Z").getTime();
+    const msPerYear = 1000 * 60 * 60 * 24 * 365.2425; // avg year length
 
     function timeToAlexYears(ms) {
       const years = ms / msPerYear;
@@ -29,7 +29,7 @@
     }
 
     function updateCurrentAlex() {
-      const now = new Date();
+      const now = Date.now(); // current time in ms
       const diff = now - alexStart;
       document.getElementById("currentAlex").textContent = timeToAlexYears(diff);
     }
@@ -37,13 +37,9 @@
     function calculateDOB() {
       const dobInput = document.getElementById("dob").value;
       if (!dobInput) return;
-      const dob = new Date(dobInput);
+      const dob = new Date(dobInput).getTime();
       const diff = dob - alexStart;
-      if (diff < 0) {
-        document.getElementById("dobResult").textContent = "You were born before 1 Alex!";
-      } else {
-        document.getElementById("dobResult").textContent = timeToAlexYears(diff);
-      }
+      document.getElementById("dobResult").textContent = timeToAlexYears(diff);
     }
 
     updateCurrentAlex();
