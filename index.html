@@ -1,27 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Alex Time</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
-    #currentAlex { font-size: 2rem; margin: 1rem 0; }
-    input, button { margin: 0.5rem; padding: 0.5rem; }
+    /* Reset some basics */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      color: #222;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1, h2 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #3b82f6; /* nice blue */
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 3rem;
+      color: #444;
+    }
+
+    #currentAlex {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-top: 1rem;
+      color: #1e40af; /* deeper blue */
+      background: white;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+      min-width: 14rem;
+      user-select: none;
+    }
+
+    .input-container {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    input[type="date"] {
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      border: 2px solid #3b82f6;
+      border-radius: 6px;
+      transition: border-color 0.3s ease;
+      flex-grow: 1;
+      min-width: 150px;
+    }
+
+    input[type="date"]:focus {
+      outline: none;
+      border-color: #1e40af;
+      box-shadow: 0 0 5px #1e40af;
+    }
+
+    button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.55rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      flex-shrink: 0;
+      min-width: 100px;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+    }
+
+    #dobResult {
+      margin-top: 1rem;
+      font-size: 1.25rem;
+      color: #111;
+      min-height: 1.5em; /* to keep space reserved */
+      font-weight: 600;
+      user-select: none;
+    }
+
+    @media (max-width: 400px) {
+      #currentAlex {
+        font-size: 2.2rem;
+        padding: 0.75rem 1.25rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      button, input[type="date"] {
+        flex-grow: 1;
+        min-width: 100%;
+      }
+
+      .input-container {
+        flex-direction: column;
+        max-width: 280px;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>Current Alex</h1>
-  <div id="currentAlex"></div>
+  <div id="currentAlex">Loading...</div>
 
   <h2>Find Your Age in Alex's</h2>
-  <input type="date" id="dob">
-  <button onclick="calculateDOB()">Calculate</button>
-  <div id="dobResult"></div>
+  <div class="input-container">
+    <input type="date" id="dob" aria-label="Date of Birth" />
+    <button onclick="calculateDOB()">Calculate</button>
+  </div>
+  <div id="dobResult" aria-live="polite"></div>
 
   <script>
     const alexStart = new Date("2005-01-22T00:00:00Z").getTime();
-    const msPerYear = 1000 * 60 * 60 * 24 * 365.2425; // avg year length
+    const msPerYear = 1000 * 60 * 60 * 24 * 365.2425;
 
     function timeToAlexYears(ms) {
       const years = ms / msPerYear;
@@ -39,16 +161,18 @@
       if (!dobInput) return;
       const dob = new Date(dobInput).getTime();
       const diff = dob - alexStart;
-      document.getElementById("dobResult").textContent = timeToAlexYears(diff);
+      const resultEl = document.getElementById("dobResult");
+      resultEl.textContent = diff < 0
+        ? `You are ${timeToAlexYears(-diff)} Alex years younger than Alex.`
+        : `You are ${timeToAlexYears(diff)} Alex years older than Alex.`;
     }
 
-    // Animation loop with fallback to 60fps if rAF isn't available
     function loop() {
       updateCurrentAlex();
       if (window.requestAnimationFrame) {
         requestAnimationFrame(loop);
       } else {
-        setTimeout(loop, 1000 / 60); // fallback ~60fps
+        setTimeout(loop, 1000 / 60);
       }
     }
     loop();
