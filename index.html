@@ -91,12 +91,17 @@
     #dobResult {
       margin-top: 1rem;
       font-size: 1.25rem;
-      color: #111;
+      color: #111; /* default color */
       min-height: 1.5em;
       font-weight: 600;
       user-select: none;
       text-align: center;
       transition: color 0.3s ease;
+    }
+    /* Light mode dobResult text color for better legibility */
+    html[data-theme="light"] #dobResult,
+    body:not([data-theme="dark"]) #dobResult {
+      color: #333;
     }
     @media (max-width: 400px) {
       #currentAlex {
