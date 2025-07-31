@@ -5,102 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alex Time</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    #alexValue {
-      font-size: 2em;
-      margin: 20px 0;
-    }
-    input {
-      padding: 8px;
-      font-size: 1em;
-    }
-    button {
-      padding: 8px 12px;
-      font-size: 1em;
-      margin-left: 8px;
-    }
-    #result {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
+    #currentAlex { font-size: 2rem; margin: 1rem 0; }
+    input, button { margin: 0.5rem; padding: 0.5rem; }
   </style>
 </head>
 <body>
-  <h1>Welcome to Alex Time</h1>
-  <div id="alexValue"></div>
+  <h1>Current Alex</h1>
+  <div id="currentAlex"></div>
 
-  <h2>Find your age in Alexes</h2>
+  <h2>Find Your Age in Alex's</h2>
   <input type="date" id="dob">
-  <button onclick="startLiveAge()">Calculate</button>
-  <div id="result"></div>
+  <button onclick="calculateDOB()">Calculate</button>
+  <div id="dobResult"></div>
 
   <script>
-    const alexStart = new Date('2005-01-22T00:00:00Z');
-    let dob = null; // Will hold the user's date of birth
+    const alexStart = new Date("2005-01-22T00:00:00Z");
 
-    function getCurrentAlexParts() {
+    function timeToAlexFormat(ms) {
+      let seconds = Math.floor(ms / 1000);
+      const mins = Math.floor(seconds / 60); seconds %= 60;
+      const hours = Math.floor(mins / 60); const minutes = mins % 60;
+      const daysTotal = Math.floor(hours / 24); const hrs = hours % 24;
+      const years = Math.floor(daysTotal / 365);
+      const weeks = Math.floor((daysTotal % 365) / 7);
+      const days = (daysTotal % 365) % 7;
+
+      return `${years}:${weeks}:${days}:${hrs}:${minutes}:${seconds}`;
+    }
+
+    function updateCurrentAlex() {
       const now = new Date();
-      let diffMs = now - alexStart;
-
-      const sec = 1000;
-      const min = sec * 60;
-      const hr = min * 60;
-      const day = hr * 24;
-      const year = day * 365.25; // average year length including leap years
-
-      const years = Math.floor(diffMs / year);
-      diffMs -= years * year;
-
-      const days = Math.floor(diffMs / day);
-      diffMs -= days * day;
-
-      const hours = Math.floor(diffMs / hr);
-      diffMs -= hours * hr;
-
-      const minutes = Math.floor(diffMs / min);
-      diffMs -= minutes * min;
-
-      const seconds = Math.floor(diffMs / sec);
-
-      return { years, days, hours, minutes, seconds };
+      const diff = now - alexStart;
+      document.getElementById("currentAlex").textContent = timeToAlexFormat(diff);
     }
 
-    function updateAlex() {
-      const { years, days, hours, minutes, seconds } = getCurrentAlexParts();
-      document.getElementById('alexValue').innerText = 
-        `Current Alex: ${years}:${days}:${hours}:${minutes}:${seconds}`;
-    }
-
-    function updateAge() {
-      if (!dob) return;
-      const now = new Date();
-      const ageMs = now - dob;
-      const alexMs = now - alexStart;
-      const ageInAlexes = ageMs / alexMs;
-      document.getElementById('result').innerText = 
-        `Your age is ${ageInAlexes.toFixed(6)} Alexes`;
-    }
-
-    function startLiveAge() {
-      const dobInput = document.getElementById('dob').value;
+    function calculateDOB() {
+      const dobInput = document.getElementById("dob").value;
       if (!dobInput) return;
-      dob = new Date(dobInput);
-      updateAge(); // Initial calculation
+      const dob = new Date(dobInput);
+      const diff = dob - alexStart;
+      if (diff < 0) {
+        document.getElementById("dobResult").textContent = "You were born before 1 Alex!";
+      } else {
+        document.getElementById("dobResult").textContent = timeToAlexFormat(diff);
+      }
     }
 
-    // Update every second
-    setInterval(() => {
-      updateAlex();
-      updateAge();
-    }, 1000);
-
-    // Initial display
-    updateAlex();
+    updateCurrentAlex();
+    setInterval(updateCurrentAlex, 1000);
   </script>
 </body>
 </html>
