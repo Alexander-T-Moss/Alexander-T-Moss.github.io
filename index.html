@@ -121,7 +121,7 @@
 
     /* Dark mode support using data-theme attribute */
     html[data-theme="dark"] body {
-      background: #121212;
+      background: #212121;
       color: #ddd;
     }
     html[data-theme="dark"] h1 {
@@ -159,7 +159,7 @@
     /* If no data-theme attribute, fallback to system preference */
     @media (prefers-color-scheme: dark) {
       :not(html[data-theme="light"]) body {
-        background: #121212;
+        background: #212121;
         color: #ddd;
       }
       :not(html[data-theme="light"]) h1 {
@@ -228,7 +228,7 @@
   </div>
   <div id="dobResult" aria-live="polite"></div>
 
-  <button id="themeToggle" aria-label="Toggle Light/Dark Mode">🌙 Dark</button>
+  <button id="themeToggle" aria-label="Toggle Light/Dark Mode">Dark Mode</button>
 
   <script>
     const alexStart = new Date("2005-01-22T00:00:00Z").getTime();
@@ -298,11 +298,11 @@
     function setTheme(theme) {
       if (theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '🌞 Light';
+        themeToggle.textContent = 'Light Mode';
         themeToggle.setAttribute('aria-label', 'Switch to Light Mode');
       } else {
         document.documentElement.setAttribute('data-theme', 'light');
-        themeToggle.textContent = '🌙 Dark';
+        themeToggle.textContent = 'Dark Mode';
         themeToggle.setAttribute('aria-label', 'Switch to Dark Mode');
       }
     }
