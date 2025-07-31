@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Alex Time</title>
   <style>
-    /* Reset some basics */
     * {
       box-sizing: border-box;
     }
-
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f9f9f9;
@@ -21,28 +19,24 @@
       align-items: center;
       min-height: 100vh;
     }
-
     h1, h2 {
       margin-bottom: 0.5rem;
       font-weight: 600;
     }
-
     h1 {
       font-size: 2.5rem;
-      color: #3b82f6; /* nice blue */
+      color: #3b82f6;
     }
-
     h2 {
       font-size: 1.5rem;
       margin-top: 3rem;
       color: #444;
     }
-
     #currentAlex {
       font-size: 3rem;
       font-weight: 700;
       margin-top: 1rem;
-      color: #1e40af; /* deeper blue */
+      color: #1e40af;
       background: white;
       padding: 1rem 2rem;
       border-radius: 10px;
@@ -50,7 +44,6 @@
       min-width: 14rem;
       user-select: none;
     }
-
     .input-container {
       margin-top: 1rem;
       display: flex;
@@ -60,7 +53,6 @@
       max-width: 320px;
       width: 100%;
     }
-
     input[type="date"] {
       padding: 0.5rem 0.75rem;
       font-size: 1rem;
@@ -70,13 +62,11 @@
       flex-grow: 1;
       min-width: 150px;
     }
-
     input[type="date"]:focus {
       outline: none;
       border-color: #1e40af;
       box-shadow: 0 0 5px #1e40af;
     }
-
     button {
       background-color: #3b82f6;
       color: white;
@@ -90,39 +80,33 @@
       flex-shrink: 0;
       min-width: 100px;
     }
-
     button:hover {
       background-color: #1e40af;
     }
-
     #dobResult {
       margin-top: 1rem;
       font-size: 1.25rem;
       color: #111;
-      min-height: 1.5em; /* to keep space reserved */
+      min-height: 1.5em;
       font-weight: 600;
       user-select: none;
+      text-align: center;
     }
-
     @media (max-width: 400px) {
       #currentAlex {
         font-size: 2.2rem;
         padding: 0.75rem 1.25rem;
       }
-
       h1 {
         font-size: 2rem;
       }
-
       h2 {
         font-size: 1.25rem;
       }
-
       button, input[type="date"] {
         flex-grow: 1;
         min-width: 100%;
       }
-
       .input-container {
         flex-direction: column;
         max-width: 280px;
@@ -143,28 +127,47 @@
 
   <script>
     const alexStart = new Date("2005-01-22T00:00:00Z").getTime();
-    const msPerYear = 1000 * 60 * 60 * 24 * 365.2425;
 
-    function timeToAlexYears(ms) {
-      const years = ms / msPerYear;
-      return years.toFixed(10);
+    function msToYears(ms) {
+      const msPerYear = 1000 * 60 * 60 * 24 * 365.2425;
+      return ms / msPerYear;
     }
 
+    let now = Date.now();
+
     function updateCurrentAlex() {
-      const now = Date.now();
+      now = Date.now();
       const diff = now - alexStart;
-      document.getElementById("currentAlex").textContent = timeToAlexYears(diff);
+      const years = msToYears(diff);
+      document.getElementById("currentAlex").textContent = years.toFixed(10);
     }
 
     function calculateDOB() {
       const dobInput = document.getElementById("dob").value;
       if (!dobInput) return;
-      const dob = new Date(dobInput).getTime();
-      const diff = dob - alexStart;
-      const resultEl = document.getElementById("dobResult");
-      resultEl.textContent = diff < 0
-        ? `You are ${timeToAlexYears(-diff)} Alex years younger than Alex.`
-        : `You are ${timeToAlexYears(diff)} Alex years older than Alex.`;
+
+      const dobTime = new Date(dobInput).getTime();
+      now = Date.now();
+
+      const numerator = now - dobTime;
+      const denominator = now - alexStart;
+
+      if (denominator <= 0) {
+        document.getElementById("dobResult").textContent = "Alex start date is in the future!";
+        return;
+      }
+
+      const alexAge = numerator / denominator;
+
+      let message;
+
+      if (alexAge < 0) {
+        message = "The date entered is in the future!";
+      } else {
+        message = `Age in Alex years: ${alexAge.toFixed(10)}`;
+      }
+
+      document.getElementById("dobResult").textContent = message;
     }
 
     function loop() {
