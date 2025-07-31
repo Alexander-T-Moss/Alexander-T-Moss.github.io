@@ -29,7 +29,7 @@
     }
 
     function updateCurrentAlex() {
-      const now = Date.now(); // current time in ms
+      const now = Date.now();
       const diff = now - alexStart;
       document.getElementById("currentAlex").textContent = timeToAlexYears(diff);
     }
@@ -42,8 +42,12 @@
       document.getElementById("dobResult").textContent = timeToAlexYears(diff);
     }
 
-    updateCurrentAlex();
-    setInterval(updateCurrentAlex, 1000);
+    // Smooth update loop using requestAnimationFrame (~60fps)
+    function loop() {
+      updateCurrentAlex();
+      requestAnimationFrame(loop);
+    }
+    loop();
   </script>
 </body>
 </html>
