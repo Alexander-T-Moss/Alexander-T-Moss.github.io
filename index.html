@@ -18,10 +18,12 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     h1, h2 {
       margin-bottom: 0.5rem;
       font-weight: 600;
+      transition: color 0.3s ease;
     }
     h1 {
       font-size: 2.5rem;
@@ -43,6 +45,7 @@
       box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
       min-width: 14rem;
       user-select: none;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     }
     .input-container {
       margin-top: 1rem;
@@ -58,9 +61,11 @@
       font-size: 1rem;
       border: 2px solid #3b82f6;
       border-radius: 6px;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
       flex-grow: 1;
       min-width: 150px;
+      background: white;
+      color: #222;
     }
     input[type="date"]:focus {
       outline: none;
@@ -91,6 +96,7 @@
       font-weight: 600;
       user-select: none;
       text-align: center;
+      transition: color 0.3s ease;
     }
     @media (max-width: 400px) {
       #currentAlex {
@@ -110,6 +116,45 @@
       .input-container {
         flex-direction: column;
         max-width: 280px;
+      }
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #121212;
+        color: #ddd;
+      }
+      h1 {
+        color: #60a5fa; /* lighter blue */
+      }
+      h2 {
+        color: #bbb;
+      }
+      #currentAlex {
+        background: #1e40af; /* dark blue background */
+        color: #bfdbfe; /* light blue text */
+        box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
+      }
+      input[type="date"] {
+        background: #2a2a2a;
+        color: #ddd;
+        border-color: #60a5fa;
+      }
+      input[type="date"]:focus {
+        border-color: #bfdbfe;
+        box-shadow: 0 0 5px #bfdbfe;
+      }
+      button {
+        background-color: #60a5fa;
+        color: #121212;
+      }
+      button:hover {
+        background-color: #1e40af;
+        color: white;
+      }
+      #dobResult {
+        color: #ddd;
       }
     }
   </style>
