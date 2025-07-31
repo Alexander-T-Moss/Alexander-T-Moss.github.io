@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alex Time</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #alexValue {
+      font-size: 2em;
+      margin: 20px 0;
+    }
+    input {
+      padding: 8px;
+      font-size: 1em;
+    }
+    button {
+      padding: 8px 12px;
+      font-size: 1em;
+      margin-left: 8px;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Alex Time</h1>
+  <div id="alexValue"></div>
+
+  <h2>Find your age in Alexes</h2>
+  <input type="date" id="dob">
+  <button onclick="startLiveAge()">Calculate</button>
+  <div id="result"></div>
+
+  <script>
+    const alexStart = new Date('2005-01-22T00:00:00Z');
+    const unit = randomUnit(); // Pick a unit once per page load
+    let dob = null; // Will hold the user's date of birth
+
+    function randomUnit() {
+      const units = ['seconds', 'minutes', 'hours', 'days', 'years'];
+      return units[Math.floor(Math.random() * units.length)];
+    }
+
+    function getAlexValue(unit) {
+      const now = new Date();
+      const diffMs = now - alexStart;
+      switch(unit) {
+        case 'seconds': return diffMs / 1000;
+        case 'minutes': return diffMs / (1000 * 60);
+        case 'hours':   return diffMs / (1000 * 60 * 60);
+        case 'days':    return diffMs / (1000 * 60 * 60 * 24);
+        case 'years':   return diffMs / (1000 * 60 * 60 * 24 * 365.25);
+      }
+    }
+
+    function updateAlex() {
+      const value = getAlexValue(unit).toFixed(2);
+      document.getElementById('alexValue').innerText = 
+        `Current Alex: ${value} ${unit} since Jan 22, 2005`;
+    }
+
+    function updateAge() {
+      if (!dob) return;
+      const now = new Date();
+      const ageMs = now - dob;
+      const alexMs = now - alexStart;
+      const ageInAlexes = ageMs / alexMs;
+      document.getElementById('result').innerText = 
+        `Your age is ${ageInAlexes.toFixed(6)} Alexes`;
+    }
+
+    function startLiveAge() {
+      const dobInput = document.getElementById('dob').value;
+      if (!dobInput) return;
+      dob = new Date(dobInput);
+      updateAge(); // Initial call
+    }
+
+    // Update both Alex value and age every second
+    setInterval(() => {
+      updateAlex();
+      updateAge();
+    }, 1000);
+
+    // Initial Alex display
+    updateAlex();
+  </script>
+</body>
+</html>
