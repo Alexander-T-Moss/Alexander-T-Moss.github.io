@@ -42,10 +42,14 @@
       document.getElementById("dobResult").textContent = timeToAlexYears(diff);
     }
 
-    // Smooth update loop using requestAnimationFrame (~60fps)
+    // Animation loop with fallback to 60fps if rAF isn't available
     function loop() {
       updateCurrentAlex();
-      requestAnimationFrame(loop);
+      if (window.requestAnimationFrame) {
+        requestAnimationFrame(loop);
+      } else {
+        setTimeout(loop, 1000 / 60); // fallback ~60fps
+      }
     }
     loop();
   </script>
