@@ -41,30 +41,39 @@
 
   <script>
     const alexStart = new Date('2005-01-22T00:00:00Z');
-    const unit = randomUnit(); // Pick a unit once per page load
     let dob = null; // Will hold the user's date of birth
 
-    function randomUnit() {
-      const units = ['seconds', 'minutes', 'hours', 'days', 'years'];
-      return units[Math.floor(Math.random() * units.length)];
-    }
-
-    function getAlexValue(unit) {
+    function getCurrentAlexParts() {
       const now = new Date();
-      const diffMs = now - alexStart;
-      switch(unit) {
-        case 'seconds': return diffMs / 1000;
-        case 'minutes': return diffMs / (1000 * 60);
-        case 'hours':   return diffMs / (1000 * 60 * 60);
-        case 'days':    return diffMs / (1000 * 60 * 60 * 24);
-        case 'years':   return diffMs / (1000 * 60 * 60 * 24 * 365.25);
-      }
+      let diffMs = now - alexStart;
+
+      const sec = 1000;
+      const min = sec * 60;
+      const hr = min * 60;
+      const day = hr * 24;
+      const year = day * 365.25; // average year length including leap years
+
+      const years = Math.floor(diffMs / year);
+      diffMs -= years * year;
+
+      const days = Math.floor(diffMs / day);
+      diffMs -= days * day;
+
+      const hours = Math.floor(diffMs / hr);
+      diffMs -= hours * hr;
+
+      const minutes = Math.floor(diffMs / min);
+      diffMs -= minutes * min;
+
+      const seconds = Math.floor(diffMs / sec);
+
+      return { years, days, hours, minutes, seconds };
     }
 
     function updateAlex() {
-      const value = getAlexValue(unit).toFixed(2);
+      const { years, days, hours, minutes, seconds } = getCurrentAlexParts();
       document.getElementById('alexValue').innerText = 
-        `Current Alex: ${value} ${unit} since Jan 22, 2005`;
+        `Current Alex: ${years}:${days}:${hours}:${minutes}:${seconds}`;
     }
 
     function updateAge() {
@@ -81,16 +90,16 @@
       const dobInput = document.getElementById('dob').value;
       if (!dobInput) return;
       dob = new Date(dobInput);
-      updateAge(); // Initial call
+      updateAge(); // Initial calculation
     }
 
-    // Update both Alex value and age every second
+    // Update every second
     setInterval(() => {
       updateAlex();
       updateAge();
     }, 1000);
 
-    // Initial Alex display
+    // Initial display
     updateAlex();
   </script>
 </body>
