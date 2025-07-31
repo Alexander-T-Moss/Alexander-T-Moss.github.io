@@ -119,43 +119,101 @@
       }
     }
 
-    /* Dark mode support */
+    /* Dark mode support using data-theme attribute */
+    html[data-theme="dark"] body {
+      background: #121212;
+      color: #ddd;
+    }
+    html[data-theme="dark"] h1 {
+      color: #60a5fa; /* lighter blue */
+    }
+    html[data-theme="dark"] h2 {
+      color: #bbb;
+    }
+    html[data-theme="dark"] #currentAlex {
+      background: #60a5fa; /* match button background */
+      color: #121212;      /* match button text */
+      box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
+    }
+    html[data-theme="dark"] input[type="date"] {
+      background: #2a2a2a;
+      color: #ddd;
+      border-color: #60a5fa;
+    }
+    html[data-theme="dark"] input[type="date"]:focus {
+      border-color: #bfdbfe;
+      box-shadow: 0 0 5px #bfdbfe;
+    }
+    html[data-theme="dark"] button {
+      background-color: #60a5fa;
+      color: #121212;
+    }
+    html[data-theme="dark"] button:hover {
+      background-color: #1e40af;
+      color: white;
+    }
+    html[data-theme="dark"] #dobResult {
+      color: #ddd;
+    }
+
+    /* If no data-theme attribute, fallback to system preference */
     @media (prefers-color-scheme: dark) {
-      body {
+      :not(html[data-theme="light"]) body {
         background: #121212;
         color: #ddd;
       }
-      h1 {
-        color: #60a5fa; /* lighter blue */
+      :not(html[data-theme="light"]) h1 {
+        color: #60a5fa;
       }
-      h2 {
+      :not(html[data-theme="light"]) h2 {
         color: #bbb;
       }
-      #currentAlex {
-        background: #60a5fa; /* match button background */
-        color: #121212;      /* match button text */
+      :not(html[data-theme="light"]) #currentAlex {
+        background: #60a5fa;
+        color: #121212;
         box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
       }
-      input[type="date"] {
+      :not(html[data-theme="light"]) input[type="date"] {
         background: #2a2a2a;
         color: #ddd;
         border-color: #60a5fa;
       }
-      input[type="date"]:focus {
+      :not(html[data-theme="light"]) input[type="date"]:focus {
         border-color: #bfdbfe;
         box-shadow: 0 0 5px #bfdbfe;
       }
-      button {
+      :not(html[data-theme="light"]) button {
         background-color: #60a5fa;
         color: #121212;
       }
-      button:hover {
+      :not(html[data-theme="light"]) button:hover {
         background-color: #1e40af;
         color: white;
       }
-      #dobResult {
+      :not(html[data-theme="light"]) #dobResult {
         color: #ddd;
       }
+    }
+
+    /* Floating toggle button */
+    #themeToggle {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+      user-select: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      z-index: 9999;
+    }
+    #themeToggle:hover {
+      background-color: #1e40af;
     }
   </style>
 </head>
@@ -169,6 +227,8 @@
     <button onclick="calculateDOB()">Calculate</button>
   </div>
   <div id="dobResult" aria-live="polite"></div>
+
+  <button id="themeToggle" aria-label="Toggle Light/Dark Mode">🌙 Dark</button>
 
   <script>
     const alexStart = new Date("2005-01-22T00:00:00Z").getTime();
@@ -224,6 +284,37 @@
       }
     }
     loop();
+
+    // Theme toggle logic
+    const themeToggle = document.getElementById('themeToggle');
+
+    function getPreferredTheme() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      return 'light';
+    }
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '🌞 Light';
+        themeToggle.setAttribute('aria-label', 'Switch to Light Mode');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '🌙 Dark';
+        themeToggle.setAttribute('aria-label', 'Switch to Dark Mode');
+      }
+    }
+
+    // Initialize theme based on system preference
+    let currentTheme = getPreferredTheme();
+    setTheme(currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(currentTheme);
+    });
   </script>
 </body>
 </html>
