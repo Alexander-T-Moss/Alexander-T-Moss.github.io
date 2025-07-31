@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Alex Time</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
     #currentAlex { font-size: 2rem; margin: 1rem 0; }
-    input, button { margin: 0.5rem; padding: 0.5rem; }
+    input { margin: 0.5rem; padding: 0.5rem; }
+    #dobResult { margin-top: 1rem; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -15,17 +16,15 @@
   <div id="currentAlex"></div>
 
   <h2>Find Your Age in Alex's</h2>
-  <input type="date" id="dob">
-  <button onclick="calculateDOB()">Calculate</button>
+  <input type="date" id="dob" />
   <div id="dobResult"></div>
 
   <script>
     const alexStart = new Date("2005-01-22T00:00:00Z").getTime();
-    const msPerYear = 1000 * 60 * 60 * 24 * 365.2425; // avg year length
+    const msPerYear = 1000 * 60 * 60 * 24 * 365.2425;
 
     function timeToAlexYears(ms) {
-      const years = ms / msPerYear;
-      return years.toFixed(10);
+      return (ms / msPerYear).toFixed(10);
     }
 
     function updateCurrentAlex() {
@@ -34,24 +33,31 @@
       document.getElementById("currentAlex").textContent = timeToAlexYears(diff);
     }
 
-    function calculateDOB() {
+    function updateDOBResult() {
       const dobInput = document.getElementById("dob").value;
-      if (!dobInput) return;
+      if (!dobInput) {
+        document.getElementById("dobResult").textContent = "";
+        return;
+      }
       const dob = new Date(dobInput).getTime();
       const diff = dob - alexStart;
       document.getElementById("dobResult").textContent = timeToAlexYears(diff);
     }
 
-    // Animation loop with fallback to 60fps if rAF isn't available
     function loop() {
       updateCurrentAlex();
+      updateDOBResult();
       if (window.requestAnimationFrame) {
         requestAnimationFrame(loop);
       } else {
-        setTimeout(loop, 1000 / 60); // fallback ~60fps
+        setTimeout(loop, 1000 / 60);
       }
     }
+
     loop();
+
+    // Optional: update DOB result immediately when user changes input
+    document.getElementById("dob").addEventListener("input", updateDOBResult);
   </script>
 </body>
 </html>
