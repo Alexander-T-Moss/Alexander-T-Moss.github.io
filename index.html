@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Alex Time</title>
   <style>
-    /* ... same styles as before ... */
     * {
       box-sizing: border-box;
     }
@@ -237,7 +236,7 @@
 
   <div id="rightButtons">
     <a href="https://en.wikipedia.org/wiki/Vibe_coding" target="_blank" rel="noopener noreferrer">Vibe Coded</a>
-    <a href="https://github.com/Alexander-T-Moss/Alexander-T-Moss.github.io" target="_blank" rel="noopener noreferrer">V1.0</a>
+    <a href="https://github.com/Alexander-T-Moss/Alexander-T-Moss.github.io" target="_blank" rel="noopener noreferrer">V1.1</a>
   </div>
 
   <canvas id="confettiCanvas"></canvas>
@@ -296,7 +295,6 @@
     }
     loop();
 
-    // Theme toggle logic
     const themeToggle = document.getElementById("themeToggle");
 
     function setTheme(theme) {
@@ -319,13 +317,17 @@
       }
     });
 
-    // Load saved theme
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       setTheme(savedTheme);
+    } else {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme("dark");
+      } else {
+        setTheme("light");
+      }
     }
 
-    // Confetti animation
     const confettiCanvas = document.getElementById("confettiCanvas");
     const ctx = confettiCanvas.getContext("2d");
     let confettiPieces = [];
@@ -383,7 +385,6 @@
 
     function startConfetti() {
       if (confettiAnimationId) {
-        // Already running
         return;
       }
       confettiPieces = [];
@@ -419,11 +420,9 @@
       confettiAnimationId = requestAnimationFrame(animate);
     }
 
-    // Play confetti on page load if today is Jan 22 (any year)
     window.addEventListener("load", () => {
       const today = new Date();
       if (today.getMonth() === 0 && today.getDate() === 22) {
-        // Show birthday message too
         const dobResult = document.getElementById("dobResult");
         dobResult.textContent = "🎉 It's My Birthday! 🎉";
         startConfetti();
