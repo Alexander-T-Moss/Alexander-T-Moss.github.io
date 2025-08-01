@@ -31,7 +31,7 @@ of the Voron discord server. Its key distinctions are described below:
 
 > ### **V1.2** 🔹
 >  Added secret easter egg (Can you find it?) 🥚  
->  Made theme reflect the system theme 🌙
+>  Made theme reflect the system theme 🌙  
 >  Now mobile-friendly (narrow screens) 📱
 
 
