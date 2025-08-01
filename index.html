@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -232,7 +233,7 @@
     }
 
     function getDecimals() {
-      return 10;
+      return 10; // Mobile uses 6 decimals
     }
 
     function updateCurrentAlex() {
@@ -283,126 +284,132 @@
 
     const themeToggle = document.getElementById("themeToggle");
 
-    function setTheme(theme, save = true) {
-      if (theme === "dark") {
+    function applySystemTheme() {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
         document.documentElement.setAttribute("data-theme", "dark");
         themeToggle.textContent = "Light Mode";
       } else {
         document.documentElement.removeAttribute("data-theme");
         themeToggle.textContent = "Dark Mode";
       }
-      if (save) {
-        sessionStorage.setItem("theme", theme);
-      }
     }
-
-    function clearThemeOverride() {
-      sessionStorage.removeItem("theme");
-    }
-
-    function syncThemeWithSystem() {
-      if (!sessionStorage.getItem("theme")) {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-        setTheme(prefersDark.matches ? "dark" : "light", false);
-      }
-    }
-
-    const prefersDarkMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    prefersDarkMediaQuery.addEventListener("change", e => {
-      syncThemeWithSystem();
-    });
 
     themeToggle.addEventListener("click", () => {
-      const currentTheme = document.documentElement.getAttribute("data-theme");
-      if (sessionStorage.getItem("theme")) {
-        clearThemeOverride();
-        syncThemeWithSystem();
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      if (isDark) {
+        document.documentElement.removeAttribute("data-theme");
+        themeToggle.textContent = "Dark Mode";
       } else {
-        if (currentTheme === "dark") {
-          setTheme("light");
-        } else {
-          setTheme("dark");
-        }
+        document.documentElement.setAttribute("data-theme", "dark");
+        themeToggle.textContent = "Light Mode";
       }
     });
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const savedTheme = sessionStorage.getItem("theme");
-      if (savedTheme) {
-        setTheme(savedTheme, false);
-      } else {
-        syncThemeWithSystem();
-      }
+    applySystemTheme();
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      applySystemTheme();
     });
 
     const confettiCanvas = document.getElementById("confettiCanvas");
     const ctx = confettiCanvas.getContext("2d");
     let confettiPieces = [];
-    let confettiAnimation;
+    let confettiAnimationId = null;
 
     function resizeCanvas() {
       confettiCanvas.width = window.innerWidth;
       confettiCanvas.height = window.innerHeight;
     }
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
     class ConfettiPiece {
       constructor() {
         this.x = Math.random() * confettiCanvas.width;
-        this.y = Math.random() * confettiCanvas.height - confettiCanvas.height;
-        this.size = 5 + Math.random() * 5;
-        this.speedY = 1 + Math.random() * 3;
+        this.y = Math.random() * -confettiCanvas.height;
+        this.size = 8 + Math.random() * 8;
+        this.speed = 1 + Math.random() * 3;
+        this.angle = Math.random() * 2 * Math.PI;
+        this.angularSpeed = 0.02 + Math.random() * 0.05;
         this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
-        this.tilt = Math.random() * 10 - 5;
-        this.tiltSpeed = Math.random() * 0.1 + 0.05;
+        this.tilt = Math.random() * 10;
+        this.tiltAngle = 0;
+        this.opacity = 1;
       }
-      update() {
-        this.y += this.speedY;
-        this.tilt += this.tiltSpeed;
-        if (this.y > confettiCanvas.height) {
-          this.y = -this.size;
-          this.x = Math.random() * confettiCanvas.width;
+      update(fading) {
+        this.y += this.speed;
+        this.x += Math.sin(this.angle);
+        this.angle += this.angularSpeed;
+
+        if (fading) {
+          this.opacity -= 0.02;
+          if (this.opacity < 0) this.opacity = 0;
         }
+
+        this.tiltAngle += 0.1;
       }
       draw() {
-        ctx.beginPath();
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.globalAlpha = this.opacity;
         ctx.fillStyle = this.color;
-        ctx.moveTo(this.x + this.tilt, this.y);
-        ctx.lineTo(this.x + this.tilt + this.size, this.y);
-        ctx.lineTo(this.x + this.tilt + this.size / 2, this.y + this.size);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(this.size / 2, this.size / 2 + this.tilt);
+        ctx.lineTo(this.size, 0);
+        ctx.lineTo(this.size / 2, -this.size / 2 - this.tilt);
         ctx.closePath();
         ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.restore();
       }
     }
 
     function startConfetti() {
+      if (confettiAnimationId) return;
       confettiPieces = [];
       for (let i = 0; i < 150; i++) {
         confettiPieces.push(new ConfettiPiece());
       }
-      if (!confettiAnimation) {
-        confettiAnimation = requestAnimationFrame(confettiLoop);
-      }
-      setTimeout(stopConfetti, 5000);
-    }
 
-    function stopConfetti() {
-      if (confettiAnimation) {
-        cancelAnimationFrame(confettiAnimation);
-        confettiAnimation = null;
-      }
-      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-    }
+      let fading = false;
+      let fadeStartTime = null;
 
-    function confettiLoop() {
-      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      confettiPieces.forEach(piece => {
-        piece.update();
-        piece.draw();
-      });
-      confettiAnimation = requestAnimationFrame(confettiLoop);
+      function animateConfetti(timestamp) {
+        if (!fadeStartTime) fadeStartTime = timestamp;
+        const elapsed = timestamp - fadeStartTime;
+
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+        if (elapsed > 4000) {
+          fading = true;
+        }
+        if (elapsed > 6000) {
+          cancelAnimationFrame(confettiAnimationId);
+          confettiAnimationId = null;
+          ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          return;
+        }
+
+        confettiPieces.forEach(piece => {
+          piece.update(fading);
+          piece.draw();
+        });
+
+        confettiAnimationId = requestAnimationFrame(animateConfetti);
+      }
+      confettiAnimationId = requestAnimationFrame(animateConfetti);
     }
+    window.addEventListener("load", () => {
+    const today = new Date();
+      if (today.getMonth() === 0 && today.getDate() === 22) {
+        const dobResult = document.getElementById("dobResult");
+        dobResult.textContent = "🎉 It's My Birthday! 🎉";
+        startConfetti();
+  }
+});
   </script>
 </body>
 </html>
