@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -34,6 +34,7 @@
       min-width: 14rem;
       user-select: none;
       transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
     }
     html[data-theme="dark"] #currentAlex {
       background: #60a5fa;
@@ -190,6 +191,16 @@
       height: 100vh;
       z-index: 9998;
     }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.2rem; margin-top: 2rem; }
+      #currentAlex { font-size: 2rem; padding: 0.8rem 1rem; min-width: auto; }
+      button, input[type="date"] { font-size: 0.9rem; padding: 0.4rem 1rem; }
+      #dobResult { font-size: 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -220,11 +231,15 @@
       return ms / msPerYear;
     }
 
+    function getDecimals() {
+      return window.innerWidth < 600 ? 4 : 10; // Mobile uses 4 decimals
+    }
+
     function updateCurrentAlex() {
       const now = Date.now();
       const diff = now - alexStart;
       const years = msToYears(diff);
-      document.getElementById("currentAlex").textContent = years.toFixed(10);
+      document.getElementById("currentAlex").textContent = years.toFixed(getDecimals());
     }
 
     function calculateDOB() {
@@ -256,7 +271,7 @@
       if (alexAge < 0) {
         dobResult.textContent = "The date entered is in the future!";
       } else if (dobInput !== "2005-01-22") {
-        dobResult.textContent = `Age In Alex Years: ${alexAge.toFixed(10)}`;
+        dobResult.textContent = `Age In Alex Years: ${alexAge.toFixed(getDecimals())}`;
       }
     }
 
@@ -292,11 +307,8 @@
     if (savedTheme) {
       setTheme(savedTheme);
     } else {
-      // Follow OS theme on first load
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
       setTheme(prefersDark.matches ? "dark" : "light", false);
-
-      // Auto-update if user hasn't manually set a theme
       prefersDark.addEventListener('change', e => {
         if (!localStorage.getItem("theme")) {
           setTheme(e.matches ? "dark" : "light", false);
@@ -304,7 +316,7 @@
       });
     }
 
-    /* Confetti code remains unchanged */
+    /* Confetti code */
     const confettiCanvas = document.getElementById("confettiCanvas");
     const ctx = confettiCanvas.getContext("2d");
     let confettiPieces = [];
