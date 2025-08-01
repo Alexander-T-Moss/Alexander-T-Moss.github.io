@@ -38,7 +38,7 @@ of the Voron discord server. Its key distinctions are described below:
 > ### **V1.1** 🔹
 >  Added theme toggle option 🎨  
 >  Fixed theme colouring (made consistent) 🛠️  
->  Added *Vibe Coding* and *Current Version* buttons 🎶  
+>  Added *Vibe Coding*, *More Info* and *Current Version* buttons 🎶  
 
 
 > ### **V1.0** 🔹
