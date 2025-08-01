@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Alex Time</title>
   <style>
+    /* ... same styles as before ... */
     * {
       box-sizing: border-box;
     }
@@ -38,14 +39,19 @@
       font-size: 3rem;
       font-weight: 700;
       margin-top: 1rem;
-      color: #1e40af;
-      background: white;
+      background: #3b82f6;
+      color: #f9f9f9;
       padding: 1rem 2rem;
       border-radius: 10px;
       box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
       min-width: 14rem;
       user-select: none;
       transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+    html[data-theme="dark"] #currentAlex {
+      background: #60a5fa;
+      color: #212121;
+      box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
     }
     .input-container {
       margin-top: 1rem;
@@ -61,16 +67,17 @@
       font-size: 1rem;
       border: 2px solid #3b82f6;
       border-radius: 6px;
-      transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+      transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
       flex-grow: 1;
       min-width: 150px;
       background: white;
       color: #222;
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
     }
     input[type="date"]:focus {
       outline: none;
       border-color: #1e40af;
-      box-shadow: 0 0 5px #1e40af;
+      box-shadow: 0 0 8px 3px #1e40af;
     }
     button {
       background-color: #3b82f6;
@@ -81,126 +88,60 @@
       font-size: 1rem;
       cursor: pointer;
       font-weight: 600;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
       flex-shrink: 0;
       min-width: 100px;
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
     }
     button:hover {
       background-color: #1e40af;
+      color: white;
+      box-shadow: 0 8px 20px rgba(30, 64, 175, 0.7);
     }
     #dobResult {
       margin-top: 1rem;
       font-size: 1.25rem;
-      color: #111; /* default color */
       min-height: 1.5em;
       font-weight: 600;
       user-select: none;
       text-align: center;
       transition: color 0.3s ease;
+      color: #444;
     }
-    /* Light mode dobResult text color for better legibility */
-    html[data-theme="light"] #dobResult,
-    body:not([data-theme="dark"]) #dobResult {
-      color: #333;
-    }
-    @media (max-width: 400px) {
-      #currentAlex {
-        font-size: 2.2rem;
-        padding: 0.75rem 1.25rem;
-      }
-      h1 {
-        font-size: 2rem;
-      }
-      h2 {
-        font-size: 1.25rem;
-      }
-      button, input[type="date"] {
-        flex-grow: 1;
-        min-width: 100%;
-      }
-      .input-container {
-        flex-direction: column;
-        max-width: 280px;
-      }
-    }
-
-    /* Dark mode support using data-theme attribute */
     html[data-theme="dark"] body {
       background: #212121;
       color: #ddd;
     }
     html[data-theme="dark"] h1 {
-      color: #60a5fa; /* lighter blue */
+      color: #60a5fa;
     }
     html[data-theme="dark"] h2 {
       color: #bbb;
-    }
-    html[data-theme="dark"] #currentAlex {
-      background: #60a5fa; /* match button background */
-      color: #333;      /* match button text */
-      box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
     }
     html[data-theme="dark"] input[type="date"] {
       background: #2a2a2a;
       color: #ddd;
       border-color: #60a5fa;
+      box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
     }
     html[data-theme="dark"] input[type="date"]:focus {
       border-color: #bfdbfe;
-      box-shadow: 0 0 5px #bfdbfe;
+      box-shadow: 0 0 8px 3px #bfdbfe;
     }
     html[data-theme="dark"] button {
       background-color: #60a5fa;
       color: #333;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
     }
     html[data-theme="dark"] button:hover {
       background-color: #1e40af;
       color: white;
+      box-shadow: 0 8px 20px rgba(30, 64, 175, 0.8);
     }
     html[data-theme="dark"] #dobResult {
-      color: #ddd;
+      color: #bbb;
     }
-
-    /* If no data-theme attribute, fallback to system preference */
-    @media (prefers-color-scheme: dark) {
-      :not(html[data-theme="light"]) body {
-        background: #212121;
-        color: #ddd;
-      }
-      :not(html[data-theme="light"]) h1 {
-        color: #60a5fa;
-      }
-      :not(html[data-theme="light"]) h2 {
-        color: #bbb;
-      }
-      :not(html[data-theme="light"]) #currentAlex {
-        background: #60a5fa;
-        color: #121212;
-        box-shadow: 0 6px 15px rgba(96, 165, 250, 0.6);
-      }
-      :not(html[data-theme="light"]) input[type="date"] {
-        background: #2a2a2a;
-        color: #ddd;
-        border-color: #60a5fa;
-      }
-      :not(html[data-theme="light"]) input[type="date"]:focus {
-        border-color: #bfdbfe;
-        box-shadow: 0 0 5px #bfdbfe;
-      }
-      :not(html[data-theme="light"]) button {
-        background-color: #60a5fa;
-        color: #121212;
-      }
-      :not(html[data-theme="light"]) button:hover {
-        background-color: #1e40af;
-        color: white;
-      }
-      :not(html[data-theme="light"]) #dobResult {
-        color: #ddd;
-      }
-    }
-
-    /* Floating toggle button */
     #themeToggle {
       position: fixed;
       bottom: 1rem;
@@ -216,9 +157,68 @@
       user-select: none;
       transition: background-color 0.3s ease, color 0.3s ease;
       z-index: 9999;
+      min-width: 100px;
+      text-align: center;
     }
     #themeToggle:hover {
       background-color: #1e40af;
+      color: white;
+    }
+    html[data-theme="dark"] #themeToggle {
+      background-color: #60a5fa;
+      color: #333;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    html[data-theme="dark"] #themeToggle:hover {
+      background-color: #1e40af;
+      color: white;
+    }
+    #rightButtons {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 9999;
+    }
+    #rightButtons a {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+      user-select: none;
+      text-decoration: none;
+      text-align: center;
+      min-width: 100px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-weight: 600;
+      display: inline-block;
+    }
+    #rightButtons a:hover {
+      background-color: #1e40af;
+      color: white;
+    }
+    html[data-theme="dark"] #rightButtons a {
+      background-color: #60a5fa;
+      color: #333;
+    }
+    html[data-theme="dark"] #rightButtons a:hover {
+      background-color: #1e40af;
+      color: white;
+    }
+    #confettiCanvas {
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9998;
     }
   </style>
 </head>
@@ -235,6 +235,13 @@
 
   <button id="themeToggle" aria-label="Toggle Light/Dark Mode">Dark Mode</button>
 
+  <div id="rightButtons">
+    <a href="https://en.wikipedia.org/wiki/Vibe_coding" target="_blank" rel="noopener noreferrer">Vibe Coded</a>
+    <a href="https://github.com/Alexander-T-Moss/Alexander-T-Moss.github.io" target="_blank" rel="noopener noreferrer">V1.0</a>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+
   <script>
     const alexStart = new Date("2005-01-22T00:00:00Z").getTime();
 
@@ -243,10 +250,8 @@
       return ms / msPerYear;
     }
 
-    let now = Date.now();
-
     function updateCurrentAlex() {
-      now = Date.now();
+      const now = Date.now();
       const diff = now - alexStart;
       const years = msToYears(diff);
       document.getElementById("currentAlex").textContent = years.toFixed(10);
@@ -256,69 +261,173 @@
       const dobInput = document.getElementById("dob").value;
       if (!dobInput) return;
 
+      const dobResult = document.getElementById("dobResult");
+
+      if (dobInput === "2005-01-22") {
+        dobResult.textContent = "🎉 That's My Birthdate! 🎉";
+        startConfetti();
+      } else {
+        dobResult.textContent = "";
+      }
+
       const dobTime = new Date(dobInput).getTime();
-      now = Date.now();
+      const now = Date.now();
 
       const numerator = now - dobTime;
       const denominator = now - alexStart;
 
       if (denominator <= 0) {
-        document.getElementById("dobResult").textContent = "Alex start date is in the future!";
+        dobResult.textContent = "Alex start date is in the future!";
         return;
       }
 
       const alexAge = numerator / denominator;
 
-      let message;
-
       if (alexAge < 0) {
-        message = "The date entered is in the future!";
-      } else {
-        message = `Age In Alex Years: ${alexAge.toFixed(10)}`;
+        dobResult.textContent = "The date entered is in the future!";
+      } else if (dobInput !== "2005-01-22") {
+        dobResult.textContent = `Age In Alex Years: ${alexAge.toFixed(10)}`;
       }
-
-      document.getElementById("dobResult").textContent = message;
     }
 
     function loop() {
       updateCurrentAlex();
-      if (window.requestAnimationFrame) {
-        requestAnimationFrame(loop);
-      } else {
-        setTimeout(loop, 1000 / 60);
-      }
+      requestAnimationFrame(loop);
     }
     loop();
 
     // Theme toggle logic
-    const themeToggle = document.getElementById('themeToggle');
-
-    function getPreferredTheme() {
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
-      return 'light';
-    }
+    const themeToggle = document.getElementById("themeToggle");
 
     function setTheme(theme) {
-      if (theme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = 'Light Mode';
-        themeToggle.setAttribute('aria-label', 'Switch to Light Mode');
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        themeToggle.textContent = "Light Mode";
       } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        themeToggle.textContent = 'Dark Mode';
-        themeToggle.setAttribute('aria-label', 'Switch to Dark Mode');
+        document.documentElement.removeAttribute("data-theme");
+        themeToggle.textContent = "Dark Mode";
+      }
+      localStorage.setItem("theme", theme);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      if (currentTheme === "dark") {
+        setTheme("light");
+      } else {
+        setTheme("dark");
+      }
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+
+    // Confetti animation
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let confettiPieces = [];
+    let confettiAnimationId = null;
+
+    function resizeCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class ConfettiPiece {
+      constructor() {
+        this.x = Math.random() * confettiCanvas.width;
+        this.y = Math.random() * -confettiCanvas.height;
+        this.size = 8 + Math.random() * 8;
+        this.speed = 1 + Math.random() * 3;
+        this.angle = Math.random() * 2 * Math.PI;
+        this.angularSpeed = 0.02 + Math.random() * 0.05;
+        this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        this.tilt = Math.random() * 10;
+        this.tiltAngle = 0;
+        this.opacity = 1;
+      }
+      update(fading) {
+        this.y += this.speed;
+        this.x += Math.sin(this.angle);
+        this.angle += this.angularSpeed;
+
+        if (fading) {
+          this.opacity -= 0.02;
+          if (this.opacity < 0) this.opacity = 0;
+        }
+
+        this.tiltAngle += 0.1;
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(this.size / 2, this.size / 2 + this.tilt);
+        ctx.lineTo(this.size, 0);
+        ctx.lineTo(this.size / 2, -this.size / 2 - this.tilt);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.restore();
       }
     }
 
-    // Initialize theme based on system preference
-    let currentTheme = getPreferredTheme();
-    setTheme(currentTheme);
+    function startConfetti() {
+      if (confettiAnimationId) {
+        // Already running
+        return;
+      }
+      confettiPieces = [];
+      for (let i = 0; i < 150; i++) {
+        confettiPieces.push(new ConfettiPiece());
+      }
 
-    themeToggle.addEventListener('click', () => {
-      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      setTheme(currentTheme);
+      let fading = false;
+      let fadeStartTime = null;
+
+      function animate(timestamp) {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+        confettiPieces.forEach(piece => piece.update(fading));
+        confettiPieces.forEach(piece => piece.draw());
+
+        if (!fading) {
+          if (!fadeStartTime) fadeStartTime = timestamp;
+          if (timestamp - fadeStartTime > 5000) {
+            fading = true;
+          }
+        } else {
+          if (confettiPieces.every(p => p.opacity <= 0.01)) {
+            cancelAnimationFrame(confettiAnimationId);
+            confettiAnimationId = null;
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            return;
+          }
+        }
+
+        confettiAnimationId = requestAnimationFrame(animate);
+      }
+      confettiAnimationId = requestAnimationFrame(animate);
+    }
+
+    // Play confetti on page load if today is Jan 22 (any year)
+    window.addEventListener("load", () => {
+      const today = new Date();
+      if (today.getMonth() === 0 && today.getDate() === 22) {
+        // Show birthday message too
+        const dobResult = document.getElementById("dobResult");
+        dobResult.textContent = "🎉 It's My Birthday! 🎉";
+        startConfetti();
+      }
     });
   </script>
 </body>
