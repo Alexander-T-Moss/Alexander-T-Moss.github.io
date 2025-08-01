@@ -12,11 +12,27 @@ A long time ago in a discord server far, far away....<br><br>
 ![Original Msg](./origin_msg.png)
 <br><br>
 
+## Overview 🔍
+Alex's is the standardised system of time measurement in the brexited channel  
+of the Voron discord server. Its key distinctions are described below:
+<details>
+  <summary>Advantages</summary>
+
+  > If your Alex age is >1, then you only ever get younger in Alex's
+</details>
+<details>
+  <summary>Disadvantages</summary>
+
+  > If your Alex age is <1, then you only ever get older in Alex's
+</details>
+<br>
+
 ## Change Log ⚙️
 
 > ### **V1.2** 🔹
->  Added secret easter egg 🥚  
->  Made theme reflect the system theme 🌙  
+>  Added secret easter egg (Can you find it?) 🥚  
+>  Made theme reflect the system theme 🌙
+>  Now mobile-friendly (narrow screens) 📱
 
 
 > ### **V1.1** 🔹
@@ -27,5 +43,13 @@ A long time ago in a discord server far, far away....<br><br>
 
 > ### **V1.0** 🔹
 > Initial release 🚀
+
+<br><br>
+
+## Remarks 📚
+This is a continuation of a bit that was started a long time ago.  
+And for that reason, I didn't fancy learning HTML just for a joke.  
+Therefore, I made this site with [vibe coding](https://en.wikipedia.org/wiki/Vibe_coding) (ChatGPT) in an afternoon.  
+If this made you chuckle, leaving a star lets me know I made someone smile. 😊
 
 </div>
