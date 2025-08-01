@@ -4,7 +4,7 @@
 [![Discord](https://img.shields.io/badge/Discord-7289da?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/users/alexandertmoss)
 [![MakerWorld](https://img.shields.io/static/v1?label=&message=MakerWorld&color=%2300AE42&style=for-the-badge&logo=bambulab&logoColor=white)](https://makerworld.com/en/@AlexanderT_Moss)
 [![AlexCalculator](https://img.shields.io/badge/ALEX_CALCULATOR-60a5fa?style=for-the-badge&logo=securityscorecard)](https://alexander-t-moss.github.io/)
-
+[![Github pages](https://img.shields.io/badge/Github_pages-BBDDE5?style=for-the-badge&logo=Gitbook&logoColor=white)](https://pages.github.com/)
 
 ## Alex Age Calculator 🎉
 
