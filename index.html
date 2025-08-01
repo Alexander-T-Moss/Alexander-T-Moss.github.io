@@ -319,15 +319,10 @@
       }
     });
 
-    // Load saved theme or system preference
+    // Load saved theme
     const savedTheme = localStorage.getItem("theme");
-
     if (savedTheme) {
       setTheme(savedTheme);
-    } else {
-      // No saved theme, match system preference
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setTheme(prefersDark ? "dark" : "light");
     }
 
     // Confetti animation
@@ -358,58 +353,82 @@
       }
       update(fading) {
         this.y += this.speed;
+        this.x += Math.sin(this.angle);
         this.angle += this.angularSpeed;
-        this.tiltAngle += 0.1;
-        this.tilt = Math.sin(this.tiltAngle) * 15;
+
         if (fading) {
           this.opacity -= 0.02;
+          if (this.opacity < 0) this.opacity = 0;
         }
-        if (this.y > confettiCanvas.height) {
-          this.y = 0;
-          this.x = Math.random() * confettiCanvas.width;
-          this.opacity = 1;
-        }
+
+        this.tiltAngle += 0.1;
       }
       draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        ctx.fillStyle = this.color;
         ctx.globalAlpha = this.opacity;
-        ctx.fillRect(-this.size / 2, this.tilt / 2, this.size, this.size / 2);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(this.size / 2, this.size / 2 + this.tilt);
+        ctx.lineTo(this.size, 0);
+        ctx.lineTo(this.size / 2, -this.size / 2 - this.tilt);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
         ctx.restore();
       }
     }
 
     function startConfetti() {
-      if (confettiAnimationId !== null) return;
+      if (confettiAnimationId) {
+        // Already running
+        return;
+      }
       confettiPieces = [];
       for (let i = 0; i < 150; i++) {
         confettiPieces.push(new ConfettiPiece());
       }
-      let fading = false;
-      let frameCount = 0;
 
-      function animate() {
+      let fading = false;
+      let fadeStartTime = null;
+
+      function animate(timestamp) {
         ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        confettiPieces.forEach(p => {
-          p.update(fading);
-          p.draw();
-        });
-        frameCount++;
-        if (frameCount > 150) {
-          fading = true;
+
+        confettiPieces.forEach(piece => piece.update(fading));
+        confettiPieces.forEach(piece => piece.draw());
+
+        if (!fading) {
+          if (!fadeStartTime) fadeStartTime = timestamp;
+          if (timestamp - fadeStartTime > 5000) {
+            fading = true;
+          }
+        } else {
+          if (confettiPieces.every(p => p.opacity <= 0.01)) {
+            cancelAnimationFrame(confettiAnimationId);
+            confettiAnimationId = null;
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            return;
+          }
         }
-        if (fading && confettiPieces.every(p => p.opacity <= 0)) {
-          cancelAnimationFrame(confettiAnimationId);
-          confettiAnimationId = null;
-          ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-          return;
-        }
+
         confettiAnimationId = requestAnimationFrame(animate);
       }
-      animate();
+      confettiAnimationId = requestAnimationFrame(animate);
     }
+
+    // Play confetti on page load if today is Jan 22 (any year)
+    window.addEventListener("load", () => {
+      const today = new Date();
+      if (today.getMonth() === 0 && today.getDate() === 22) {
+        // Show birthday message too
+        const dobResult = document.getElementById("dobResult");
+        dobResult.textContent = "🎉 It's My Birthday! 🎉";
+        startConfetti();
+      }
+    });
   </script>
 </body>
 </html>
