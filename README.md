@@ -50,6 +50,5 @@ of the Voron discord server. Its key distinctions are described below:
 This is a continuation of a bit that was started a long time ago.  
 And for that reason, I didn't fancy learning HTML just for a joke.  
 Therefore, I made this site with [vibe coding](https://en.wikipedia.org/wiki/Vibe_coding) (ChatGPT) in an afternoon.  
-If this made you chuckle, leaving a star lets me know I made someone smile. 😊
 
 </div>
